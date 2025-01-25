@@ -1,11 +1,17 @@
+using DataAccess.Models;
+using DataAccess.Servicios;
+using Microsoft.EntityFrameworkCore;
+
 namespace worker_service
 {
     public class Worker : BackgroundService
     {
+        private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<Worker> _logger;
 
-        public Worker(ILogger<Worker> logger)
+        public Worker(IServiceProvider serviceProvider, ILogger<Worker> logger)
         {
+            _serviceProvider = serviceProvider;
             _logger = logger;
         }
 
@@ -14,7 +20,8 @@ namespace worker_service
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await Task.Delay(1000, stoppingToken);
+
+                await Task.Delay(10000, stoppingToken);
             }
         }
     }
