@@ -1,6 +1,9 @@
 using DataAccess.Models;
 using DataAccess.Servicios;
 using Microsoft.EntityFrameworkCore;
+using worker_service.Clases;
+using Newtonsoft.Json;
+using System.Net.Http.Json;
 
 namespace worker_service
 {
@@ -21,8 +24,29 @@ namespace worker_service
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
+
+                using (var client = new HttpClient())
+                {
+                    var url = "http://localhost:5090/api/Vehiculo/evaluar-infracciones";
+
+                    var json = File.ReadAllText("eventos-camara.json");
+                    var infracciones = JsonConvert.DeserializeObject<List<EventoCamara>>(json);
+
+                    var response = await client.PostAsJsonAsync(url, infracciones);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine("Solicitud enviada con éxito.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Error: {response.StatusCode}");
+                    }
+                }
+
                 await Task.Delay(10000, stoppingToken);
             }
+
         }
     }
 }
