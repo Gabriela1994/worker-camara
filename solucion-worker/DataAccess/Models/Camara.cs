@@ -10,15 +10,12 @@ namespace DataAccess.Models
     {
         [Key]
         public int Id { get; set; }
-        [Column("coordenada")]
-        [StringLength(50)]
-        [Unicode(false)]
         public string Latitud { get; set; }
         public string Longitud { get; set; }
 
         [NotMapped]
         public string? Coordenada { get; set; }
-        [Column("numero_camara")]
+        [Column("numeroCamara")]
         public int? NumeroCamara { get; set; }
         [Column("descripcion", TypeName = "text")]
         public string? Descripcion { get; set; }
