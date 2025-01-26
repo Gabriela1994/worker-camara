@@ -13,6 +13,10 @@ namespace DataAccess.Models
         [Column("coordenada")]
         [StringLength(50)]
         [Unicode(false)]
+        public string Latitud { get; set; }
+        public string Longitud { get; set; }
+
+        [NotMapped]
         public string? Coordenada { get; set; }
         [Column("numero_camara")]
         public int? NumeroCamara { get; set; }
