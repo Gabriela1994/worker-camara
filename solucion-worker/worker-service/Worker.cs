@@ -24,7 +24,6 @@ namespace worker_service
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
-
                 using (var client = new HttpClient())
                 {
                     var url = "http://localhost:5090/api/Vehiculo/evaluar-infracciones";
@@ -36,14 +35,13 @@ namespace worker_service
 
                     if (response.IsSuccessStatusCode)
                     {
-                        Console.WriteLine("Solicitud enviada con éxito.");
+                        Console.WriteLine("Solicitud enviada con ï¿½xito.");
                     }
                     else
                     {
                         Console.WriteLine($"Error: {response.StatusCode}");
                     }
                 }
-
                 await Task.Delay(10000, stoppingToken);
             }
 

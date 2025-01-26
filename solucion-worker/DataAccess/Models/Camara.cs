@@ -21,6 +21,7 @@ namespace DataAccess.Models
         public string Coordenada => $"{Latitud}, {Longitud}";
 
         [Column("numero_camara")]
+      
         public int? NumeroCamara { get; set; }
         [Column("descripcion", TypeName = "text")]
         public string? Descripcion { get; set; }
