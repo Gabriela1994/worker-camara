@@ -4,7 +4,6 @@
     {
 
         public string Fecha { get; set; }
-        public string Hora { get; set; }
         public string Latitud { get; set; }
         public string Longitud { get; set; }
         public string Patente { get; set; }
@@ -18,20 +17,11 @@
 
         }
 
-        public EventoCamara(string fecha, string hora, string latitud, string longitud, string patente, bool luces, int velocidad, string tipoVehiculo, bool poseeCasco, string colorSemaforo)
+        public EventoCamara(string fecha, string latitud, string longitud, string patente, bool luces, int velocidad, string tipoVehiculo, bool poseeCasco, string colorSemaforo)
         {
             Fecha = fecha;
-            Hora = hora;
             Latitud = latitud;
             Longitud = longitud;
-            Patente = patente;
-            Luces = luces;
-            Velocidad = velocidad;
-            TipoVehiculo = tipoVehiculo;
-            PoseeCasco = poseeCasco;
-            ColorSemaforo = colorSemaforo;
-            Fecha = fecha;
-            Hora = hora;
             Patente = patente;
             Luces = luces;
             Velocidad = velocidad;

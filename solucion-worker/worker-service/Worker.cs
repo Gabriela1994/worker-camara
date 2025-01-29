@@ -46,7 +46,6 @@ namespace worker_service
                             EventoCamara evento = new EventoCamara
                             {
                                 Fecha = "2023-11-23T14:30:00Z",
-                                Hora = "08:30",
                                 Patente = patentes[random.Next(patentes.Count)],
                                 Latitud = camara.Latitud,
                                 Longitud = camara.Longitud,
