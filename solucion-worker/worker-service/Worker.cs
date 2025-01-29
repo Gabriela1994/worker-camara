@@ -80,7 +80,6 @@ namespace worker_service
                         _logger.LogError(ex, "Error al enviar los eventos.");
                     }
                 }
-
                 await Task.Delay(10000, stoppingToken);
             }
         }
