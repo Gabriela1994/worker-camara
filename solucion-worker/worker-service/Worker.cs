@@ -1,9 +1,7 @@
-using DataAccess.Models;
 using DataAccess.Servicios;
-using Microsoft.EntityFrameworkCore;
 using worker_service.Clases;
 using Newtonsoft.Json;
-using System.Net.Http.Json;
+using System.Text;
 
 namespace worker_service
 {
@@ -11,6 +9,7 @@ namespace worker_service
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<Worker> _logger;
+        private static readonly HttpClient client = new HttpClient();
 
         public Worker(IServiceProvider serviceProvider, ILogger<Worker> logger)
         {
@@ -20,33 +19,70 @@ namespace worker_service
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            Random random = new Random();
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-
-
-                using (var client = new HttpClient())
+                using (var scope = _serviceProvider.CreateScope())
                 {
-                    var url = "http://localhost:5090/api/Vehiculo/evaluar-infracciones";
+                    var dataService = scope.ServiceProvider.GetRequiredService<DataService>();
+                    var camaras = await dataService.ObtenerCamarasAsync(stoppingToken);
 
-                    var json = File.ReadAllText("eventos-camara.json");
-                    var infracciones = JsonConvert.DeserializeObject<List<EventoCamara>>(json);
-
-                    var response = await client.PostAsJsonAsync(url, infracciones);
-
-                    if (response.IsSuccessStatusCode)
+                    if (camaras == null || !camaras.Any())
                     {
-                        Console.WriteLine("Solicitud enviada con éxito.");
+                        _logger.LogWarning("No se encontraron cámaras en la base de datos.");
+                        continue;
                     }
-                    else
+
+                    List<string> colores = new List<string> { "amarillo", "verde", "rojo" };
+                    List<string> tipoVehiculo = new List<string> { "Automovil", "Moto", "Bicicleta" };
+                    List<string> patentes = new List<string> { "KBO22P", "JGL45XF", "YJS28WE", "UJG31ED", "CLK65RA", "KSLA456", "JSKL352", "LKPP255", "HSJK778", "ZLAK466" };
+                    List<EventoCamara> listaEventos = new List<EventoCamara>();
+
+                    foreach (var camara in camaras)
                     {
-                        Console.WriteLine($"Error: {response.StatusCode}");
+                        for (int i = 0; i < patentes.Count; i++)
+                        {
+                            _logger.LogInformation($"Cámara: {camara.Id}");
+                            EventoCamara evento = new EventoCamara
+                            {
+                                Fecha = "2023-11-23T14:30:00Z",
+                                Hora = "08:30",
+                                Patente = patentes[random.Next(patentes.Count)],
+                                Latitud = camara.Latitud,
+                                Longitud = camara.Longitud,
+                                PoseeCasco = random.Next(0, 2) == 1,
+                                Luces = random.Next(0, 2) == 1,
+                                ColorSemaforo = colores[random.Next(colores.Count)],
+                                Velocidad = random.Next(10, 200),
+                                TipoVehiculo = tipoVehiculo[random.Next(tipoVehiculo.Count)],
+                            };
+                            listaEventos.Add(evento);
+                        }
+                    }
+
+                    try
+                    {
+                        var ConvertirJsonEventos = new StringContent(JsonConvert.SerializeObject(listaEventos), Encoding.UTF8, "application/json");
+                        var response = await client.PostAsync("http://localhost:5090/api/Vehiculo/evaluar-infracciones", ConvertirJsonEventos);
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            _logger.LogInformation("Solicitud enviada con éxito.");
+                        }
+                        else
+                        {
+                            var errorMessage = await response.Content.ReadAsStringAsync();
+                            _logger.LogError($"Error en la solicitud: {response.StatusCode} - {errorMessage}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Error al enviar los eventos.");
                     }
                 }
 
                 await Task.Delay(10000, stoppingToken);
             }
-
         }
     }
 }

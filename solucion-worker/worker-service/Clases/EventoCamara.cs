@@ -13,7 +13,6 @@
         public string TipoVehiculo { get; set; }
         public bool? PoseeCasco { get; set; }
         public string ColorSemaforo { get; set; }
-
         public EventoCamara()
         {
 
