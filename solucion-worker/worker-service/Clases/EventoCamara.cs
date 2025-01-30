@@ -3,7 +3,7 @@
     public class EventoCamara
     {
 
-        public string Fecha { get; set; }
+        public DateTime Fecha { get; set; }
         public string Latitud { get; set; }
         public string Longitud { get; set; }
         public string Patente { get; set; }
@@ -17,7 +17,7 @@
 
         }
 
-        public EventoCamara(string fecha, string latitud, string longitud, string patente, bool luces, int velocidad, string tipoVehiculo, bool poseeCasco, string colorSemaforo)
+        public EventoCamara(DateTime fecha, string latitud, string longitud, string patente, bool luces, int velocidad, string tipoVehiculo, bool poseeCasco, string colorSemaforo)
         {
             Fecha = fecha;
             Latitud = latitud;

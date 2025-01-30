@@ -45,7 +45,7 @@ namespace worker_service
                             _logger.LogInformation($"Cámara: {camara.Id}");
                             EventoCamara evento = new EventoCamara
                             {
-                                Fecha = "2023-11-23T14:30:00Z",
+                                Fecha = DateTime.Now,
                                 Patente = patentes[random.Next(patentes.Count)],
                                 Latitud = camara.Latitud,
                                 Longitud = camara.Longitud,
