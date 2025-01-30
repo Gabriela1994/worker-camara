@@ -23,10 +23,42 @@ namespace DataAccess.Models
         {
             modelBuilder.Entity<Camara>(entity =>
             {
+                entity.ToTable("Camara");
+
+                entity.Property(e => e.Descripcion)
+                    .HasColumnType("text")
+                    .HasColumnName("descripcion");
+
+                entity.Property(e => e.Latitud)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("latitud");
+
+                entity.Property(e => e.Longitud)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("longitud");
+
+                entity.Property(e => e.NumeroCamara).HasColumnName("numeroCamara");
+
                 entity.HasOne(d => d.IdEstadoCamaraNavigation)
                     .WithMany(p => p.Camaras)
                     .HasForeignKey(d => d.IdEstadoCamara)
                     .HasConstraintName("FK_Camara_EstadoCamara");
+            });
+
+            modelBuilder.Entity<EstadoCamara>(entity =>
+            {
+                entity.ToTable("EstadoCamara");
+
+                entity.Property(e => e.Descripcion)
+                    .HasColumnType("text")
+                    .HasColumnName("descripcion");
+
+                entity.Property(e => e.Nombre)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("nombre");
             });
 
             OnModelCreatingPartial(modelBuilder);

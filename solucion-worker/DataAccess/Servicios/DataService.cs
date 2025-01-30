@@ -1,10 +1,6 @@
 ﻿using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DataAccess.Servicios
 {
@@ -17,9 +13,9 @@ namespace DataAccess.Servicios
             _context = context;
         }
 
-        public async Task<List<EstadoCamara>> ObtenerEstadoCamarasAsync(CancellationToken stoppingToken)
+        public async Task<List<Camara>> ObtenerCamarasAsync(CancellationToken stoppingToken)
         {
-            return await _context.EstadoCamaras.ToListAsync(stoppingToken);
+            return await _context.Camaras.ToListAsync(stoppingToken);
         }
     }
 }
